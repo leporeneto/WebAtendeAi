@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WebAtendeAi - Formulário Médico</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>Formulário de Atendimento Médico</h1>
+    <form id="formulario">
+      <label>Nome do Paciente:</label>
+      <input type="text" name="nomePaciente" required />
+
+      <label>Sexo:</label>
+      <select name="sexo" id="sexo" required onchange="toggleSexo(event)">
+        <option value="Homem">Homem</option>
+        <option value="Mulher">Mulher</option>
+      </select>
+
+      <label>Acompanhado:</label>
+      <select name="acompanhado" id="acompanhado" required onchange="toggleAcompanhante(event)">
+        <option value="Não">Não</option>
+        <option value="Sim">Sim</option>
+      </select>
+
+      <div id="acompanhante-section" class="hidden">
+        <label>Nome e grau de parentesco do acompanhante:</label>
+        <input type="text" name="acompanhante" />
+      </div>
+
+      <label>Queixas:</label>
+      <textarea name="queixas" required></textarea>
+
+      <label>Início:</label>
+      <input type="text" name="inicio" id="inicio" />
+      <input type="checkbox" id="semInicio" name="semInicio" onchange="toggleInicio()" /> Somente Queixas
+
+      <label>Alergias:</label>
+      <input type="text" name="alergias" required />
+
+      <label>Medicamentos em uso:</label>
+      <input type="text" name="medicamentos" required />
+
+      <label>Comorbidades:</label>
+      <input type="text" name="comorbidades" required />
+
+      <div id="dum-section" class="hidden">
+        <label>Data da última menstruação:</label>
+        <input type="date" name="dataultima" id="dataultima" />
+        <input type="checkbox" id="nao-sabe-dum" name="naoSabeDum" onchange="toggleNaoSabeDum(event)" /> Não sabe informar a data exata
+
+        <div id="nao-sabe-dum-section" class="hidden">
+          <label>Especifique:</label>
+          <input type="text" name="naoSabeDumTexto" id="naoSabeDumTexto" />
+        </div>
+
+        <div>
+          <input type="checkbox" id="gestacao" name="gestacao" /> Gestação
+          <input type="checkbox" id="amamentacao" name="amamentacao" /> Amamentação
+          <input type="checkbox" id="menopausa" name="menopausa" /> Menopausa
+          <input type="checkbox" id="DIU" name="DIU" /> DIU/A.C.cont
+        </div>
+      </div>
+
+      <label>Exame Físico:</label>
+      <select name="exameFisico" id="exameFisico" required onchange="toggleExameFisico(event)">
+        <option value="normal">Normal</option>
+        <option value="alterado">Alterado</option>
+        <option value="dorsalgia">Dorsalgia</option>
+        <option value="conjuntivite">Conjuntivite</option>
+        <option value="vertigem">Vertigem</option>
+        <option value="amigdalite">Amigdalite</option>
+        <option value="gripe">Gripe</option>
+        <option value="geca">GECA</option>
+        <option value="colica_renal">Cólica Renal</option>
+        <option value="enxaqueca">Enxaqueca</option>
+        <option value="ansiedade">Ansiedade</option>
+        <option value="sinusite">Sinusite</option>
+        <option value="oma">OMA</option>
+        <option value="ote">OTE</option>
+        <option value="pneumonia">Pneumonia</option>
+      </select>
+
+      <div id="exame-fisico-section" class="hidden">
+        <label>GERAL:</label>
+        <textarea name="geral" id="geral"></textarea>
+        <label>NEURO:</label>
+        <textarea name="neuro" id="neuro"></textarea>
+        <label>AR:</label>
+        <textarea name="ar" id="ar"></textarea>
+        <label>ACV:</label>
+        <textarea name="acv" id="acv"></textarea>
+        <label>ABD:</label>
+        <textarea name="abd" id="abd"></textarea>
+        <label>MMII:</label>
+        <textarea name="mmii" id="mmii"></textarea>
+        <label>OUTROS:</label>
+        <textarea name="outros" id="outros"></textarea>
+      </div>
+
+      <label>Hipótese Diagnóstica:</label>
+      <input type="text" name="hipotese" required />
+
+      <fieldset>
+        <legend>Condutas:</legend>
+        <input type="checkbox" id="medHosp" name="medHosp" onchange="toggleCampo('medHosp-section')" /> Medicação hospitalar
+        <div id="medHosp-section" class="hidden">
+          <label>Especifique:</label>
+          <input type="text" name="medHospText" id="medHospText" />
+        </div>
+
+        <input type="checkbox" id="exames" name="exames" onchange="toggleCampo('exames-section')" /> Exames
+        <div id="exames-section" class="hidden">
+          <label>Especifique:</label>
+          <input type="text" name="examesText" id="examesText" />
+        </div>
+
+        <input type="checkbox" name="medDom" /> Receita para uso domiciliar<br />
+        <input type="checkbox" name="cuidados" /> Cuidados em domicílio<br />
+        <input type="checkbox" name="atestado" /> Atestado<br />
+        <input type="checkbox" name="alta" /> Alta hospitalar<br />
+
+        <input type="checkbox" id="encaminhamento" name="encaminhamento" onchange="toggleCampo('encaminhamento-section')" /> Encaminhamento
+        <div id="encaminhamento-section" class="hidden">
+          <label>Especialidade:</label>
+          <input type="text" name="encaminhamentoText" id="encaminhamentoText" />
+        </div>
+      </fieldset>
+
+      <button type="submit">Gerar Texto</button>
+    </form>
+
+    <div id="resultado" class="hidden">
+      <h2>Texto Gerado:</h2>
+      <pre id="textoFinal"></pre>
+      <button onclick="copiarTexto()">Copiar</button>
+      <button onclick="reiniciarForm()">Novo Atendimento</button>
+    </div>
+  </div>
+
+  <script src="firebase-config.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
